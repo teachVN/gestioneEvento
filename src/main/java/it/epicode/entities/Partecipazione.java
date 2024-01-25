@@ -4,14 +4,12 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "partecipazione")
+@NamedQuery(name = "getPartecipazioniDaConfermarePerEvento", query = "select p from Partecipazione p where p.stato='DA_CONFERMARE' and p.evento=:evento")
 public class Partecipazione {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-
-    @Enumerated(EnumType.STRING)
-    private Stato stato;
 
     @ManyToOne
     @JoinColumn(name = "persona_fk")
@@ -21,14 +19,17 @@ public class Partecipazione {
     @JoinColumn(name = "evento_fk")
     private Evento evento;
 
+    @Enumerated(EnumType.STRING)
+    private Stato stato;
+
     public Partecipazione() {
     }
 
-    public Partecipazione(int id, Stato stato, Persona persona, Evento evento) {
+    public Partecipazione(int id, Persona persona, Evento evento, Stato stato) {
         this.id = id;
-        this.stato = stato;
         this.persona = persona;
         this.evento = evento;
+        this.stato = stato;
     }
 
     public int getId() {
@@ -37,14 +38,6 @@ public class Partecipazione {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Stato getStato() {
-        return stato;
-    }
-
-    public void setStato(Stato stato) {
-        this.stato = stato;
     }
 
     public Persona getPersona() {
@@ -63,13 +56,20 @@ public class Partecipazione {
         this.evento = evento;
     }
 
+    public Stato getStato() {
+        return stato;
+    }
+
+    public void setStato(Stato stato) {
+        this.stato = stato;
+    }
+
     @Override
     public String toString() {
         return "Partecipazione{" +
                 "id=" + id +
+
                 ", stato=" + stato +
-                ", persona=" + persona +
-                ", evento=" + evento +
                 '}';
     }
 }

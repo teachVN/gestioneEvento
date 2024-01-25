@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "persona")
@@ -13,18 +14,29 @@ public class Persona {
     private int id;
 
     private String nome;
+
     private String cognome;
 
     private String email;
+
     @Column(name = "data_nascita")
     private LocalDate dataNascita;
 
     @Enumerated(EnumType.STRING)
     private Sesso sesso;
 
-    @OneToMany(mappedBy = "persona")
-    @OrderBy("")
+    @OneToMany(mappedBy = "persona", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OrderBy("evento asc")
     private List<Partecipazione> partecipazioni;
+
+    @ManyToMany
+    @JoinTable(name = "persone_gare",
+    joinColumns = @JoinColumn(name = "persona_fk"),
+    inverseJoinColumns = @JoinColumn(name = "gara_fk"))
+    private Set<GaraDiAtletica> gare;
+
+    @OneToMany(mappedBy = "vincitore")
+    private List<GaraDiAtletica> gareVinte;
 
     public Persona() {
     }
@@ -45,14 +57,6 @@ public class Persona {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public String getCognome() {
@@ -95,6 +99,30 @@ public class Persona {
         this.partecipazioni = partecipazioni;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Set<GaraDiAtletica> getGare() {
+        return gare;
+    }
+
+    public void setGare(Set<GaraDiAtletica> gare) {
+        this.gare = gare;
+    }
+
+    public List<GaraDiAtletica> getGareVinte() {
+        return gareVinte;
+    }
+
+    public void setGareVinte(List<GaraDiAtletica> gareVinte) {
+        this.gareVinte = gareVinte;
+    }
+
     @Override
     public String toString() {
         return "Persona{" +
@@ -104,6 +132,7 @@ public class Persona {
                 ", email='" + email + '\'' +
                 ", dataNascita=" + dataNascita +
                 ", sesso=" + sesso +
+                ", partecipazioni=" + partecipazioni +
                 '}';
     }
 }

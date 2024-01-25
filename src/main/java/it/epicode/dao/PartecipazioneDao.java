@@ -1,11 +1,10 @@
 package it.epicode.dao;
 
+import it.epicode.entities.Evento;
 import it.epicode.entities.Partecipazione;
-import it.epicode.entities.Persona;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 public class PartecipazioneDao {
 
@@ -17,11 +16,11 @@ public class PartecipazioneDao {
         em = emf.createEntityManager();
     }
 
-    public void save(Partecipazione e){
+    public void save(Partecipazione p){
         EntityTransaction et = em.getTransaction();
         et.begin();
 
-        em.persist(e);
+        em.persist(p);
 
         et.commit();
     }
@@ -30,14 +29,23 @@ public class PartecipazioneDao {
         return em.find(Partecipazione.class, id);
     }
 
-    public void delete(Partecipazione e){
-        Partecipazione ev = getById(e.getId());
-
+    public void delete(int id){
         EntityTransaction et = em.getTransaction();
         et.begin();
 
-        em.remove(ev);
-
+        Partecipazione p = getById(id);
+        em.remove(p);
         et.commit();
+    }
+
+    public void close(){
+        em.close();
+        emf.close();
+    }
+
+    public List<Partecipazione> getPartecipazioniDaConfermarePerEvento(Evento e){
+        Query q = em.createNamedQuery("getPartecipazioniDaConfermarePerEvento");
+        q.setParameter("evento", e);
+        return q.getResultList();
     }
 }

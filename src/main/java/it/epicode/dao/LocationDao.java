@@ -1,6 +1,5 @@
 package it.epicode.dao;
 
-import it.epicode.entities.Evento;
 import it.epicode.entities.Location;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -8,6 +7,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
 public class LocationDao {
+
     private EntityManagerFactory emf;
     private EntityManager em;
 
@@ -16,11 +16,11 @@ public class LocationDao {
         em = emf.createEntityManager();
     }
 
-    public void save(Location e){
+    public void save(Location p){
         EntityTransaction et = em.getTransaction();
         et.begin();
 
-        em.persist(e);
+        em.persist(p);
 
         et.commit();
     }
@@ -29,14 +29,17 @@ public class LocationDao {
         return em.find(Location.class, id);
     }
 
-    public void delete(Location e){
-        Location ev = getById(e.getId());
-
+    public void delete(int id){
         EntityTransaction et = em.getTransaction();
         et.begin();
 
-        em.remove(ev);
-
+        Location p = getById(id);
+        em.remove(p);
         et.commit();
+    }
+
+    public void close(){
+        em.close();
+        emf.close();
     }
 }

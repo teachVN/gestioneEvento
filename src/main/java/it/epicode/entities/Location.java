@@ -3,11 +3,9 @@ package it.epicode.entities;
 import jakarta.persistence.*;
 
 import java.util.List;
-
 @Entity
 @Table(name = "location")
 public class Location {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;

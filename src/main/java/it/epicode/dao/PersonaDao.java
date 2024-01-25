@@ -1,6 +1,5 @@
 package it.epicode.dao;
 
-import it.epicode.entities.Location;
 import it.epicode.entities.Persona;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -17,11 +16,11 @@ public class PersonaDao {
         em = emf.createEntityManager();
     }
 
-    public void save(Persona e){
+    public void save(Persona p){
         EntityTransaction et = em.getTransaction();
         et.begin();
 
-        em.persist(e);
+        em.persist(p);
 
         et.commit();
     }
@@ -30,14 +29,17 @@ public class PersonaDao {
         return em.find(Persona.class, id);
     }
 
-    public void delete(Persona e){
-        Persona ev = getById(e.getId());
-
+    public void delete(int id){
         EntityTransaction et = em.getTransaction();
         et.begin();
 
-        em.remove(ev);
-
+        Persona p = getById(id);
+        em.remove(p);
         et.commit();
+    }
+
+    public void close(){
+        em.close();
+        emf.close();
     }
 }
